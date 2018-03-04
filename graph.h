@@ -10,11 +10,7 @@ template <class T>
 class graph {
 protected:
 	unordered_map<T, int> dataMap;
-	T findByValue(int i) {
-		for (auto it = dataMap.cbegin(); it != dataMap.cend(); ++it)
-			if (it->second == i)
-				return it->first;
-	}
+	vector<T> reverseMap;
 public:
 	graph() {
 	}
@@ -24,12 +20,32 @@ public:
 	virtual bool checkVertex(const T& node) {
 		return dataMap.find(node) != dataMap.end();
 	}
-	virtual bool addVertex(const T& node) = 0;	// pure virtual function
-	virtual void removeVertex(int nodeIndex) = 0;	// pure virtual function
+	virtual bool addVertex(const T& node) {
+		if (checkVertex(node))	return false;
+		dataMap[node] = reverseMap.size();
+		reverseMap.push_back(node);
+		return true;
+	}
+	virtual void removeVertex(int nodeIndex) {
+		// it replaces the last added obj at that place
+		T lastNode = reverseMap.back();
+		dataMap[lastNode] = nodeIndex;
+		dataMap.erase(reverseMap[nodeIndex]);
+		reverseMap[nodeIndex] = lastNode;
+		reverseMap.pop_back();
+		return;
+	}
 	virtual bool checkEdge(int, int, bool) = 0;	// pure virtual function
 	virtual bool checkEdge(int a, int b) {
 		return checkEdge(a, b, true) || checkEdge(a, b, false);
 	}
+	virtual bool checkEdge(const T& nodeA, const T& nodeB, bool AtoB) {
+		return checkEdge(dataMap[nodeA], dataMap[nodeB], AtoB);
+	}
+	virtual bool checkEdge(const T& nodeA, const T& nodeB) {
+		return checkEdge( dataMap[nodeA], dataMap[nodeB]);
+	}
+
 	virtual void addEdge(int, int, bool) = 0;		// pure virtual function
 	virtual void addEdge(int a, int b) {
 		addEdge(a, b, true);
@@ -72,8 +88,20 @@ public:
 	virtual void removeEdge(const T& nodeA, const T& nodeB) {
 		removeEdge(dataMap[nodeA], dataMap[nodeB]);
 	}
-	virtual vector<int> getChildren(int) = 0;		// pure virtual function
-	virtual vector<int> getParents(int) = 0;		// pure virtual function
+	virtual vector<int> getChildren(int x) {
+		vector<int> result;
+		for (int i = 0; i<dataMap.size(); i++) {
+			if (checkEdge(x, i, true))	result.push_back(i);
+		}
+		return result;
+	}
+	virtual vector<int> getParents(int x) {
+		vector<int> result;
+		for (int i = 0; i<dataMap.size(); i++) {
+			if (checkEdge(x, i, false))	result.push_back(i);
+		}
+		return result;
+	}
 	virtual vector<int> getAdjacent(int x) {
 		vector<int> children = getChildren(x);
 		vector<int> result = getParents(x);
@@ -121,10 +149,10 @@ public:
 		dataMap[nodeB] = temp;
 	}
 	virtual void print() {
-
-		cout << "Vetex Mapping:" << endl;
-		for (auto it = dataMap.cbegin(); it != dataMap.cend(); ++it) {
-			cout << it->second << "\t" << it->first << endl;
+		cout << "Total vertices in graph: " << reverseMap.size() << endl;
+		cout << "Vertex Mapping:" << endl;
+		for (int i = 0; i<reverseMap.size(); i++) {
+			cout << i << "\t" << reverseMap[i] << endl;
 		}
 	}
 
