@@ -18,10 +18,11 @@ public:
 		return edgeMap(x, y);
 	}
 	bool addVertex(const T& node) {
-		if (this->checkVertex(node))	return false;
-		this->dataMap[node] = edgeMap.size();
-		edgeMap.addOne();
-		return true;
+		if (graph<T>::addVertex(node)) {
+			edgeMap.addOne();
+			return true;
+		}
+		return false;
 	}
 	void addEdge(int x, int y, bool direct) {
 		if (!direct)	swap(x, y);
@@ -33,29 +34,12 @@ public:
 		edgeMap(x, y) = 0;
 		return;
 	}
-	vector<int> getChildren(int x) {
-		vector<int> result;
-		for (int i = 0; i<edgeMap.size(); i++) {
-			if (edgeMap(x, i))	result.push_back(i);
-		}
-		return result;
-	}
-	vector<int> getParents(int x) {
-		vector<int> result;
-		for (int i = 0; i<edgeMap.size(); i++) {
-			if (edgeMap(i, x))	result.push_back(i);
-		}
-		return result;
-	}
 	void removeVertex(int nodeIndex) {
-		this->removeEdgesOf(nodeIndex);
-		this->dataMap.erase(this->findByValue(nodeIndex));
+		graph<T>::removeVertex(nodeIndex);
 		edgeMap.remove(nodeIndex);
-		this->dataMap[this->findByValue(edgeMap.size())] = nodeIndex;
 		return;
 	}
 	void print() {
-		cout << "Total vertices in graph: " << edgeMap.size() << endl;
 		graph<T>::print();
 		cout << "Edge mapping:" << endl;
 		cout << edgeMap << endl;
