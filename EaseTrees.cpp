@@ -11,6 +11,7 @@ int main()
 	testNode();
 	testSquareVector();
 	testMatrixGraph();
-    return 0;
+	testNodeGraph();
+	return 0;
 }
 
