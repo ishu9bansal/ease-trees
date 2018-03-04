@@ -6,3 +6,4 @@
 #include "Node.h"
 #include "SquareVector.h"
 #include "matrixGraph.h"
+#include "NodeGraph.h"
