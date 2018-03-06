@@ -90,14 +90,14 @@ public:
 	}
 	virtual vector<int> getChildren(int x) {
 		vector<int> result;
-		for (int i = 0; i<dataMap.size(); i++) {
+		for (int i = 0; i<reverseMap.size(); i++) {
 			if (checkEdge(x, i, true))	result.push_back(i);
 		}
 		return result;
 	}
 	virtual vector<int> getParents(int x) {
 		vector<int> result;
-		for (int i = 0; i<dataMap.size(); i++) {
+		for (int i = 0; i<reverseMap.size(); i++) {
 			if (checkEdge(x, i, false))	result.push_back(i);
 		}
 		return result;
@@ -143,11 +143,15 @@ public:
 	virtual void removeVertex(const T& node) {
 		removeVertex(dataMap[node]);
 	}
+	/*
 	virtual void change(const T& nodeA, const T& nodeB) {
 		int temp = dataMap[nodeA];
 		dataMap[nodeA] = dataMap[nodeB];
 		dataMap[nodeB] = temp;
+		reverseMap[dataMap[nodeA]] = nodeA;
+		reverseMap[dataMap[nodeB]] = nodeB;
 	}
+	*/
 	virtual void print() {
 		cout << "Total vertices in graph: " << reverseMap.size() << endl;
 		cout << "Vertex Mapping:" << endl;
