@@ -1,2 +1,4 @@
 # ease-trees
-An attempt to make trees useful for everyone
+not being updated anymore
+
+go to https://github.com/ishu9bansal/ease-trees-vs for latest changes
